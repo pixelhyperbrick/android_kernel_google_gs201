@@ -634,6 +634,9 @@ struct fuse_conn {
 	/** Maxmum number of pages that can be used in a single request */
 	unsigned int max_pages;
 
+	/** Constrain ->max_pages to this value during feature negotiation */
+	unsigned int max_pages_limit;
+
 	/** Input queue */
 	struct fuse_iqueue iq;
 
@@ -1451,14 +1454,11 @@ void *fuse_link_finalize(struct fuse_bpf_args *fa, struct dentry *entry,
 			 struct inode *dir, struct dentry *newent);
 
 int fuse_release_initialize(struct fuse_bpf_args *fa, struct fuse_release_in *fri,
-			    struct inode *inode, struct file *file);
-int fuse_releasedir_initialize(struct fuse_bpf_args *fa,
-			struct fuse_release_in *fri,
-			struct inode *inode, struct file *file);
+			    struct inode *inode, struct fuse_file *ff);
 int fuse_release_backing(struct fuse_bpf_args *fa,
-			 struct inode *inode, struct file *file);
+			 struct inode *inode, struct fuse_file *ff);
 void *fuse_release_finalize(struct fuse_bpf_args *fa,
-			    struct inode *inode, struct file *file);
+			    struct inode *inode, struct fuse_file *ff);
 
 int fuse_flush_initialize(struct fuse_bpf_args *fa, struct fuse_flush_in *ffi,
 			  struct file *file, fl_owner_t id);
@@ -1832,6 +1832,16 @@ void __exit fuse_bpf_cleanup(void);
 
 ssize_t fuse_bpf_simple_request(struct fuse_mount *fm, struct fuse_bpf_args *args);
 
+static inline int fuse_bpf_run(struct bpf_prog *prog, struct fuse_bpf_args *fba)
+{
+	int ret;
+
+	migrate_disable();
+	ret = BPF_PROG_RUN(prog, fba);
+	migrate_enable();
+	return ret;
+}
+
 /*
  * expression statement to wrap the backing filter logic
  * struct inode *inode: inode with bpf and backing inode
@@ -1883,7 +1893,7 @@ ssize_t fuse_bpf_simple_request(struct fuse_mount *fm, struct fuse_bpf_args *arg
 		fa.out_numargs = fa.in_numargs;				\
 									\
 		ext_flags = fuse_inode->bpf ?				\
-			BPF_PROG_RUN(fuse_inode->bpf, &fa) :		\
+			fuse_bpf_run(fuse_inode->bpf, &fa) :		\
 			FUSE_BPF_BACKING;				\
 		if (ext_flags < 0) {					\
 			fer = (struct fuse_err_ret) {			\
@@ -1938,7 +1948,7 @@ ssize_t fuse_bpf_simple_request(struct fuse_mount *fm, struct fuse_bpf_args *arg
 					.size = fa.out_args[i].size,	\
 					.value = fa.out_args[i].value,	\
 				};					\
-		ext_flags = BPF_PROG_RUN(fuse_inode->bpf, &fa);		\
+		ext_flags = fuse_bpf_run(fuse_inode->bpf, &fa);		\
 		if (ext_flags < 0) {					\
 			fer = (struct fuse_err_ret) {			\
 				ERR_PTR(ext_flags),			\

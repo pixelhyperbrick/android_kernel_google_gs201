@@ -4049,6 +4049,18 @@ not holding a previously reported uncorrected error).
 :Parameters: struct kvm_s390_cmma_log (in, out)
 :Returns: 0 on success, a negative value on error
 
+Errors:
+
+  ======     =============================================================
+  ENOMEM     not enough memory can be allocated to complete the task
+  ENXIO      if CMMA is not enabled
+  EINVAL     if KVM_S390_CMMA_PEEK is not set but migration mode was not enabled
+  EINVAL     if KVM_S390_CMMA_PEEK is not set but dirty tracking has been
+             disabled (and thus migration mode was automatically disabled)
+  EFAULT     if the userspace address is invalid or if no page table is
+             present for the addresses (e.g. when using hugepages).
+  ======     =============================================================
+
 This ioctl is used to get the values of the CMMA bits on the s390
 architecture. It is meant to be used in two scenarios:
 
@@ -4128,12 +4140,6 @@ not enabled.
 mask is unused.
 
 values points to the userspace buffer where the result will be stored.
-
-This ioctl can fail with -ENOMEM if not enough memory can be allocated to
-complete the task, with -ENXIO if CMMA is not enabled, with -EINVAL if
-KVM_S390_CMMA_PEEK is not set but migration mode was not enabled, with
--EFAULT if the userspace address is invalid or if no page table is
-present for the addresses (e.g. when using hugepages).
 
 4.108 KVM_S390_SET_CMMA_BITS
 ----------------------------
@@ -4855,7 +4861,8 @@ have deterministic behavior.
   };
 
 Copies Memory Tagging Extension (MTE) tags to/from guest tag memory. The
-``guest_ipa`` and ``length`` fields must be ``PAGE_SIZE`` aligned. The ``addr``
+``guest_ipa`` and ``length`` fields must be ``PAGE_SIZE`` aligned.
+``length`` must not be bigger than 2^31 - PAGE_SIZE bytes. The ``addr``
 field must point to a buffer which the tags will be copied to or from.
 
 ``flags`` specifies the direction of copy, either ``KVM_ARM_TAGS_TO_GUEST`` or
