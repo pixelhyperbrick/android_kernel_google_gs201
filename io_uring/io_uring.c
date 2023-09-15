@@ -1102,8 +1102,7 @@ static int __io_register_rsrc_update(struct io_ring_ctx *ctx, unsigned type,
 				     unsigned nr_args);
 static void io_clean_op(struct io_kiocb *req);
 static struct file *io_file_get(struct io_ring_ctx *ctx,
-				struct io_kiocb *req, int fd, bool fixed,
-				unsigned int issue_flags);
+				struct io_kiocb *req, int fd, bool fixed);
 static void __io_queue_sqe(struct io_kiocb *req);
 static void io_rsrc_put_work(struct work_struct *work);
 
@@ -3986,7 +3985,7 @@ static int io_tee(struct io_kiocb *req, unsigned int issue_flags)
 		return -EAGAIN;
 
 	in = io_file_get(req->ctx, req, sp->splice_fd_in,
-			 (sp->flags & SPLICE_F_FD_IN_FIXED), issue_flags);
+				  (sp->flags & SPLICE_F_FD_IN_FIXED));
 	if (!in) {
 		ret = -EBADF;
 		goto done;
@@ -4026,7 +4025,7 @@ static int io_splice(struct io_kiocb *req, unsigned int issue_flags)
 		return -EAGAIN;
 
 	in = io_file_get(req->ctx, req, sp->splice_fd_in,
-			 (sp->flags & SPLICE_F_FD_IN_FIXED), issue_flags);
+				  (sp->flags & SPLICE_F_FD_IN_FIXED));
 	if (!in) {
 		ret = -EBADF;
 		goto done;
@@ -6887,16 +6886,13 @@ static void io_fixed_file_set(struct io_fixed_file *file_slot, struct file *file
 }
 
 static inline struct file *io_file_get_fixed(struct io_ring_ctx *ctx,
-					     struct io_kiocb *req, int fd,
-					     unsigned int issue_flags)
+					     struct io_kiocb *req, int fd)
 {
-	struct file *file = NULL;
+	struct file *file;
 	unsigned long file_ptr;
 
-	io_ring_submit_lock(ctx, !(issue_flags & IO_URING_F_NONBLOCK));
-
 	if (unlikely((unsigned int)fd >= ctx->nr_user_files))
-		goto out;
+		return NULL;
 	fd = array_index_nospec(fd, ctx->nr_user_files);
 	file_ptr = io_fixed_file_slot(&ctx->file_table, fd)->file_ptr;
 	file = (struct file *) (file_ptr & FFS_MASK);
@@ -6904,8 +6900,6 @@ static inline struct file *io_file_get_fixed(struct io_ring_ctx *ctx,
 	/* mask in overlapping REQ_F and FFS bits */
 	req->flags |= (file_ptr << REQ_F_NOWAIT_READ_BIT);
 	io_req_set_rsrc_node(req);
-out:
-	io_ring_submit_unlock(ctx, !(issue_flags & IO_URING_F_NONBLOCK));
 	return file;
 }
 
@@ -6923,11 +6917,10 @@ static struct file *io_file_get_normal(struct io_ring_ctx *ctx,
 }
 
 static inline struct file *io_file_get(struct io_ring_ctx *ctx,
-				       struct io_kiocb *req, int fd, bool fixed,
-				       unsigned int issue_flags)
+				       struct io_kiocb *req, int fd, bool fixed)
 {
 	if (fixed)
-		return io_file_get_fixed(ctx, req, fd, issue_flags);
+		return io_file_get_fixed(ctx, req, fd);
 	else
 		return io_file_get_normal(ctx, req, fd);
 }
@@ -7149,8 +7142,7 @@ static int io_init_req(struct io_ring_ctx *ctx, struct io_kiocb *req,
 
 	if (io_op_defs[req->opcode].needs_file) {
 		req->file = io_file_get(ctx, req, READ_ONCE(sqe->fd),
-					(sqe_flags & IOSQE_FIXED_FILE),
-					IO_URING_F_NONBLOCK);
+					(sqe_flags & IOSQE_FIXED_FILE));
 		if (unlikely(!req->file))
 			ret = -EBADF;
 	}
