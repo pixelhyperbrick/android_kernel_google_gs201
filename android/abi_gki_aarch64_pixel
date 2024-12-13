@@ -1595,6 +1595,7 @@
   param_set_copystring
   param_set_int
   param_set_uint
+  param_set_uint_minmax
   pci_alloc_irq_vectors_affinity
   pci_assign_resource
   pci_clear_master
