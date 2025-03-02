@@ -553,6 +553,7 @@
       <elf-symbol name='alloc_chrdev_region' type='func-type' binding='global-binding' visibility='default-visibility' is-defined='yes' crc='0xe3ec2f2b'/>
       <elf-symbol name='alloc_etherdev_mqs' type='func-type' binding='global-binding' visibility='default-visibility' is-defined='yes' crc='0x35259fd5'/>
       <elf-symbol name='alloc_io_pgtable_ops' type='func-type' binding='global-binding' visibility='default-visibility' is-defined='yes' crc='0x15b12fac'/>
+      <elf-symbol name='alloc_iova' type='func-type' binding='global-binding' visibility='default-visibility' is-defined='yes' crc='0x9e7955a7'/>
       <elf-symbol name='alloc_iova_fast' type='func-type' binding='global-binding' visibility='default-visibility' is-defined='yes' crc='0x7c9bed48'/>
       <elf-symbol name='alloc_netdev_mqs' type='func-type' binding='global-binding' visibility='default-visibility' is-defined='yes' crc='0x2c573a3e'/>
       <elf-symbol name='alloc_pages_exact' type='func-type' binding='global-binding' visibility='default-visibility' is-defined='yes' crc='0x5fc72f0e'/>
@@ -2042,6 +2043,7 @@
       <elf-symbol name='free_buffer_head' type='func-type' binding='global-binding' visibility='default-visibility' is-defined='yes' crc='0x3e9f259e'/>
       <elf-symbol name='free_candev' type='func-type' binding='global-binding' visibility='default-visibility' is-defined='yes' crc='0xe568f91'/>
       <elf-symbol name='free_io_pgtable_ops' type='func-type' binding='global-binding' visibility='default-visibility' is-defined='yes' crc='0x9e5c5bed'/>
+      <elf-symbol name='free_iova' type='func-type' binding='global-binding' visibility='default-visibility' is-defined='yes' crc='0xcc5b5fba'/>
       <elf-symbol name='free_iova_fast' type='func-type' binding='global-binding' visibility='default-visibility' is-defined='yes' crc='0x6907c213'/>
       <elf-symbol name='free_irq' type='func-type' binding='global-binding' visibility='default-visibility' is-defined='yes' crc='0xc1514a3b'/>
       <elf-symbol name='free_netdev' type='func-type' binding='global-binding' visibility='default-visibility' is-defined='yes' crc='0xd67e457b'/>
@@ -3857,6 +3859,7 @@
       <elf-symbol name='serio_unregister_port' type='func-type' binding='global-binding' visibility='default-visibility' is-defined='yes' crc='0x501fdc15'/>
       <elf-symbol name='set_bh_page' type='func-type' binding='global-binding' visibility='default-visibility' is-defined='yes' crc='0x93d90098'/>
       <elf-symbol name='set_blocksize' type='func-type' binding='global-binding' visibility='default-visibility' is-defined='yes' crc='0x3a10b4e3'/>
+      <elf-symbol name='set_cached_acl' type='func-type' binding='global-binding' visibility='default-visibility' is-defined='yes' crc='0x4d70e944'/>
       <elf-symbol name='set_capacity_revalidate_and_notify' type='func-type' binding='global-binding' visibility='default-visibility' is-defined='yes' crc='0xd52ef3a6'/>
       <elf-symbol name='set_cpus_allowed_ptr' type='func-type' binding='global-binding' visibility='default-visibility' is-defined='yes' crc='0xbd179a66'/>
       <elf-symbol name='set_disk_ro' type='func-type' binding='global-binding' visibility='default-visibility' is-defined='yes' crc='0x24462b13'/>
@@ -80750,6 +80753,7 @@
         <parameter type-id='7292109c'/>
         <return type-id='95e97e5e'/>
       </function-type>
+      <pointer-type-def type-id='f3a719f4' size-in-bits='64' id='b2ea0a72'/>
       <pointer-type-def type-id='751b0878' size-in-bits='64' id='b2edd032'/>
       <function-type size-in-bits='64' id='b2f05574'>
         <parameter type-id='666fb412'/>
@@ -122065,6 +122069,13 @@
         <parameter type-id='eaa32e2f' name='cookie' filepath='drivers/iommu/io-pgtable.c' line='31' column='1'/>
         <return type-id='bf4bdb64'/>
       </function-decl>
+      <function-decl name='alloc_iova' mangled-name='alloc_iova' filepath='drivers/iommu/iova.c' line='388' column='1' visibility='default' binding='global' size-in-bits='64' elf-symbol-id='alloc_iova'>
+        <parameter type-id='0c2c419d' name='iovad' filepath='drivers/iommu/iova.c' line='388' column='1'/>
+        <parameter type-id='7359adad' name='size' filepath='drivers/iommu/iova.c' line='388' column='1'/>
+        <parameter type-id='7359adad' name='limit_pfn' filepath='drivers/iommu/iova.c' line='389' column='1'/>
+        <parameter type-id='b50a4934' name='size_aligned' filepath='drivers/iommu/iova.c' line='390' column='1'/>
+        <return type-id='b2ea0a72'/>
+      </function-decl>
       <function-decl name='alloc_iova_fast' mangled-name='alloc_iova_fast' filepath='drivers/iommu/iova.c' line='511' column='1' visibility='default' binding='global' size-in-bits='64' elf-symbol-id='alloc_iova_fast'>
         <parameter type-id='0c2c419d' name='iovad' filepath='drivers/iommu/iova.c' line='511' column='1'/>
         <parameter type-id='7359adad' name='size' filepath='drivers/iommu/iova.c' line='511' column='1'/>
@@ -130055,6 +130066,11 @@
       </function-decl>
       <function-decl name='free_io_pgtable_ops' mangled-name='free_io_pgtable_ops' filepath='drivers/iommu/io-pgtable.c' line='59' column='1' visibility='default' binding='global' size-in-bits='64' elf-symbol-id='free_io_pgtable_ops'>
         <parameter type-id='bf4bdb64' name='ops' filepath='drivers/iommu/io-pgtable.c' line='59' column='1'/>
+        <return type-id='48b5725f'/>
+      </function-decl>
+      <function-decl name='free_iova' mangled-name='free_iova' filepath='drivers/iommu/iova.c' line='490' column='1' visibility='default' binding='global' size-in-bits='64' elf-symbol-id='free_iova'>
+        <parameter type-id='0c2c419d' name='iovad' filepath='drivers/iommu/iova.c' line='490' column='1'/>
+        <parameter type-id='7359adad' name='pfn' filepath='drivers/iommu/iova.c' line='490' column='1'/>
         <return type-id='48b5725f'/>
       </function-decl>
       <function-decl name='free_iova_fast' mangled-name='free_iova_fast' filepath='drivers/iommu/iova.c' line='550' column='1' visibility='default' binding='global' size-in-bits='64' elf-symbol-id='free_iova_fast'>
@@ -138666,38 +138682,38 @@
         <parameter type-id='f23e2572' name='p' filepath='kernel/sched/core.c' line='6721' column='1'/>
         <return type-id='48b5725f'/>
       </function-decl>
-      <function-decl name='sched_trace_cfs_rq_avg' mangled-name='sched_trace_cfs_rq_avg' filepath='kernel/sched/fair.c' line='11738' column='1' visibility='default' binding='global' size-in-bits='64' elf-symbol-id='sched_trace_cfs_rq_avg'>
-        <parameter type-id='a6892387' name='cfs_rq' filepath='kernel/sched/fair.c' line='11738' column='1'/>
+      <function-decl name='sched_trace_cfs_rq_avg' mangled-name='sched_trace_cfs_rq_avg' filepath='kernel/sched/fair.c' line='11734' column='1' visibility='default' binding='global' size-in-bits='64' elf-symbol-id='sched_trace_cfs_rq_avg'>
+        <parameter type-id='a6892387' name='cfs_rq' filepath='kernel/sched/fair.c' line='11734' column='1'/>
         <return type-id='847e6fee'/>
       </function-decl>
-      <function-decl name='sched_trace_cfs_rq_cpu' mangled-name='sched_trace_cfs_rq_cpu' filepath='kernel/sched/fair.c' line='11762' column='1' visibility='default' binding='global' size-in-bits='64' elf-symbol-id='sched_trace_cfs_rq_cpu'>
-        <parameter type-id='a6892387' name='cfs_rq' filepath='kernel/sched/fair.c' line='11762' column='1'/>
+      <function-decl name='sched_trace_cfs_rq_cpu' mangled-name='sched_trace_cfs_rq_cpu' filepath='kernel/sched/fair.c' line='11758' column='1' visibility='default' binding='global' size-in-bits='64' elf-symbol-id='sched_trace_cfs_rq_cpu'>
+        <parameter type-id='a6892387' name='cfs_rq' filepath='kernel/sched/fair.c' line='11758' column='1'/>
         <return type-id='95e97e5e'/>
       </function-decl>
-      <function-decl name='sched_trace_cfs_rq_path' mangled-name='sched_trace_cfs_rq_path' filepath='kernel/sched/fair.c' line='11748' column='1' visibility='default' binding='global' size-in-bits='64' elf-symbol-id='sched_trace_cfs_rq_path'>
-        <parameter type-id='a6892387' name='cfs_rq' filepath='kernel/sched/fair.c' line='11748' column='1'/>
-        <parameter type-id='26a90f95' name='str' filepath='kernel/sched/fair.c' line='11748' column='1'/>
-        <parameter type-id='95e97e5e' name='len' filepath='kernel/sched/fair.c' line='11748' column='1'/>
+      <function-decl name='sched_trace_cfs_rq_path' mangled-name='sched_trace_cfs_rq_path' filepath='kernel/sched/fair.c' line='11744' column='1' visibility='default' binding='global' size-in-bits='64' elf-symbol-id='sched_trace_cfs_rq_path'>
+        <parameter type-id='a6892387' name='cfs_rq' filepath='kernel/sched/fair.c' line='11744' column='1'/>
+        <parameter type-id='26a90f95' name='str' filepath='kernel/sched/fair.c' line='11744' column='1'/>
+        <parameter type-id='95e97e5e' name='len' filepath='kernel/sched/fair.c' line='11744' column='1'/>
         <return type-id='26a90f95'/>
       </function-decl>
-      <function-decl name='sched_trace_rd_span' mangled-name='sched_trace_rd_span' filepath='kernel/sched/fair.c' line='11816' column='1' visibility='default' binding='global' size-in-bits='64' elf-symbol-id='sched_trace_rd_span'>
-        <parameter type-id='c13bca88' name='rd' filepath='kernel/sched/fair.c' line='11816' column='1'/>
+      <function-decl name='sched_trace_rd_span' mangled-name='sched_trace_rd_span' filepath='kernel/sched/fair.c' line='11812' column='1' visibility='default' binding='global' size-in-bits='64' elf-symbol-id='sched_trace_rd_span'>
+        <parameter type-id='c13bca88' name='rd' filepath='kernel/sched/fair.c' line='11812' column='1'/>
         <return type-id='5f8a1ac4'/>
       </function-decl>
-      <function-decl name='sched_trace_rq_avg_dl' mangled-name='sched_trace_rq_avg_dl' filepath='kernel/sched/fair.c' line='11778' column='1' visibility='default' binding='global' size-in-bits='64' elf-symbol-id='sched_trace_rq_avg_dl'>
-        <parameter type-id='6ed6b432' name='rq' filepath='kernel/sched/fair.c' line='11778' column='1'/>
+      <function-decl name='sched_trace_rq_avg_dl' mangled-name='sched_trace_rq_avg_dl' filepath='kernel/sched/fair.c' line='11774' column='1' visibility='default' binding='global' size-in-bits='64' elf-symbol-id='sched_trace_rq_avg_dl'>
+        <parameter type-id='6ed6b432' name='rq' filepath='kernel/sched/fair.c' line='11774' column='1'/>
         <return type-id='847e6fee'/>
       </function-decl>
-      <function-decl name='sched_trace_rq_avg_irq' mangled-name='sched_trace_rq_avg_irq' filepath='kernel/sched/fair.c' line='11788' column='1' visibility='default' binding='global' size-in-bits='64' elf-symbol-id='sched_trace_rq_avg_irq'>
-        <parameter type-id='6ed6b432' name='rq' filepath='kernel/sched/fair.c' line='11788' column='1'/>
+      <function-decl name='sched_trace_rq_avg_irq' mangled-name='sched_trace_rq_avg_irq' filepath='kernel/sched/fair.c' line='11784' column='1' visibility='default' binding='global' size-in-bits='64' elf-symbol-id='sched_trace_rq_avg_irq'>
+        <parameter type-id='6ed6b432' name='rq' filepath='kernel/sched/fair.c' line='11784' column='1'/>
         <return type-id='847e6fee'/>
       </function-decl>
-      <function-decl name='sched_trace_rq_avg_rt' mangled-name='sched_trace_rq_avg_rt' filepath='kernel/sched/fair.c' line='11768' column='1' visibility='default' binding='global' size-in-bits='64' elf-symbol-id='sched_trace_rq_avg_rt'>
-        <parameter type-id='6ed6b432' name='rq' filepath='kernel/sched/fair.c' line='11768' column='1'/>
+      <function-decl name='sched_trace_rq_avg_rt' mangled-name='sched_trace_rq_avg_rt' filepath='kernel/sched/fair.c' line='11764' column='1' visibility='default' binding='global' size-in-bits='64' elf-symbol-id='sched_trace_rq_avg_rt'>
+        <parameter type-id='6ed6b432' name='rq' filepath='kernel/sched/fair.c' line='11764' column='1'/>
         <return type-id='847e6fee'/>
       </function-decl>
-      <function-decl name='sched_trace_rq_cpu' mangled-name='sched_trace_rq_cpu' filepath='kernel/sched/fair.c' line='11798' column='1' visibility='default' binding='global' size-in-bits='64' elf-symbol-id='sched_trace_rq_cpu'>
-        <parameter type-id='6ed6b432' name='rq' filepath='kernel/sched/fair.c' line='11798' column='1'/>
+      <function-decl name='sched_trace_rq_cpu' mangled-name='sched_trace_rq_cpu' filepath='kernel/sched/fair.c' line='11794' column='1' visibility='default' binding='global' size-in-bits='64' elf-symbol-id='sched_trace_rq_cpu'>
+        <parameter type-id='6ed6b432' name='rq' filepath='kernel/sched/fair.c' line='11794' column='1'/>
         <return type-id='95e97e5e'/>
       </function-decl>
       <var-decl name='sched_uclamp_used' type-id='237c0d27' mangled-name='sched_uclamp_used' visibility='default' filepath='kernel/sched/core.c' line='972' column='1' elf-symbol-id='sched_uclamp_used'/>
@@ -139343,6 +139359,12 @@
         <parameter type-id='b88dd945' name='bdev' filepath='fs/block_dev.c' line='157' column='1'/>
         <parameter type-id='95e97e5e' name='size' filepath='fs/block_dev.c' line='157' column='1'/>
         <return type-id='95e97e5e'/>
+      </function-decl>
+      <function-decl name='set_cached_acl' mangled-name='set_cached_acl' filepath='fs/posix_acl.c' line='63' column='1' visibility='default' binding='global' size-in-bits='64' elf-symbol-id='set_cached_acl'>
+        <parameter type-id='7e666abe' name='inode' filepath='fs/posix_acl.c' line='63' column='1'/>
+        <parameter type-id='95e97e5e' name='type' filepath='fs/posix_acl.c' line='63' column='1'/>
+        <parameter type-id='2871909b' name='acl' filepath='fs/posix_acl.c' line='63' column='1'/>
+        <return type-id='48b5725f'/>
       </function-decl>
       <function-decl name='set_capacity_revalidate_and_notify' mangled-name='set_capacity_revalidate_and_notify' filepath='block/genhd.c' line='52' column='1' visibility='default' binding='global' size-in-bits='64' elf-symbol-id='set_capacity_revalidate_and_notify'>
         <parameter type-id='33c599da' name='disk' filepath='block/genhd.c' line='52' column='1'/>
